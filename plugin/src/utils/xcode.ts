@@ -5,10 +5,13 @@ import {
 } from "./constants";
 import type { XcodeProject } from "@expo/config-plugins";
 
-export const createPbxGroup = (project: XcodeProject, bundleName: string) => {
+export const createPbxGroup = (
+  project: XcodeProject,
+  bundleName: string,
+  sources: string[]
+) => {
   const filePathsArray = [
-    NSE.IMPLEMENTATION_FILE,
-    NSE.HEADER_FILE,
+    ...sources,
     `${bundleName}${NSE.PLIST_FILE_SUFFIX}`,
     `${bundleName}${NSE.ENTITLEMENTS_FILE_SUFFIX}`,
   ];
@@ -50,13 +53,12 @@ export const createTarget = (
   return uuid as string;
 };
 
-export const addBuildPhases = (project: XcodeProject, targetId: string) => {
-  project.addBuildPhase(
-    [NSE.IMPLEMENTATION_FILE, NSE.HEADER_FILE],
-    "PBXSourcesBuildPhase",
-    "Sources",
-    targetId
-  );
+export const addBuildPhases = (
+  project: XcodeProject,
+  targetId: string,
+  sources: string[]
+) => {
+  project.addBuildPhase(sources, "PBXSourcesBuildPhase", "Sources", targetId);
   project.addBuildPhase([], "PBXFrameworksBuildPhase", "Frameworks", targetId);
   project.addBuildPhase([], "PBXResourcesBuildPhase", "Resources", targetId);
 };

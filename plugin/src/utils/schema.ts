@@ -22,13 +22,13 @@ export const PluginPropsSchema = z
     appDelegate: z
       .object({
         remoteNotificationsDelegate: z.string().optional(),
-        imports: z.string().optional(),
+        imports: z.union([z.string(), z.array(z.string())]).optional(),
       })
       .optional(),
     nse: z
       .object({
-        mFilePath: z.string().optional(),
-        hFilePath: z.string().optional(),
+        mFilePath: z.union([z.string(), z.array(z.string())]).optional(),
+        hFilePath: z.union([z.string(), z.array(z.string())]).optional(),
         bundleName: z.string().default(NSE.BUNDLE_NAME),
       })
       .default({}),

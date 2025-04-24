@@ -7,7 +7,7 @@ export function validatePluginProperties(props?: PluginProps) {
   } catch (error) {
     if (error instanceof ZodError) {
       throw new Error(
-        "provided expo-nseplugin properties are invalid\n" + error.message
+        "provided expo-nse-plugin properties are invalid\n" + error.message
       );
     }
     throw error;

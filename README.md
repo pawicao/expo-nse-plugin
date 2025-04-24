@@ -64,11 +64,11 @@ Advanced:
           },
           "appDelegate": {
             "remoteNotificationsDelegate": "[SomeOtherService setPushIdentifier:deviceToken];",
-            "imports": "#import \"SomeOtherService.h\""
+            "imports": "#import \"SomeOtherService.h\"" // or array of import lines
           },
           "nse": {
-            "mFilePath": "./my_path/to_a_custom_nse_implementation_file",
-            "hFilePath": "./my_path/to_a_custom_nse_header_file",
+            "mFilePath": "./my_path/to_a_custom_nse_implementation_file", // or array of filepaths
+            "hFilePath": "./my_path/to_a_custom_nse_header_file", // or array of filepaths
             "bundleName": "NotificationServiceExtension",
           }
         }
@@ -89,9 +89,9 @@ All the options of the plugin configurable from the `app.json` / `app.config.js`
 | `backgroundModes.remoteNotifications`     | `boolean`                       | No           | `true`                           | Enables remote notifications background mode in your app's capabilities (if set to false, keeps as-is)            |
 | `backgroundModes.fetch`                   | `boolean`                       | No           | `false`                          | Enables background fetch capability in your app's capabilities (if set to false, keeps as-is)                     |
 | `appDelegate.remoteNotificationsDelegate` | `string`                        | No           | None                             | Custom code to be injected into the `didRegisterForRemoteNotificationsWithDeviceToken` method of your AppDelegate |
-| `appDelegate.imports`                     | `string`                        | No           | None                             | Additional import statements to be added to your AppDelegate                                                      |
-| `nse.mFilePath`                           | `string`                        | No           | Default Xcode's NSE content      | Path to a custom implementation file (.m) for the Notification Service Extension                                  |
-| `nse.hFilePath`                           | `string`                        | No           | Default Xcode's NSE content      | Path to a custom header file (.h) for the Notification Service Extension                                          |
+| `appDelegate.imports`                     | `string \| string[]`            | No           | None                             | Additional import statements to be added to your AppDelegate                                                      |
+| `nse.mFilePath`                           | `string \| string[]`            | No           | Default Xcode's NSE content      | Path to a custom implementation file (.m) for the Notification Service Extension                                  |
+| `nse.hFilePath`                           | `string \| string[]`            | No           | Default Xcode's NSE content      | Path to a custom header file (.h) for the Notification Service Extension                                          |
 | `nse.bundleName`                          | `string`                        | No           | `"NotificationServiceExtension"` | The name of your Notification Service Extension target                                                            |
 
 # Contributing & testing

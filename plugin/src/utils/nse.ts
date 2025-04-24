@@ -12,7 +12,7 @@ export const copyHeaderFile = (
 ) => {
   const filePath =
     hFilePath || path.join(defaultFilesDirectory, NSE.HEADER_FILE);
-  copyNseFile(projectRoot, bundleName, filePath, NSE.HEADER_FILE);
+  return copyNseFile(projectRoot, bundleName, filePath);
 };
 
 export const copyImplementationFile = (
@@ -22,7 +22,7 @@ export const copyImplementationFile = (
 ) => {
   const filePath =
     mFilePath || path.join(defaultFilesDirectory, NSE.IMPLEMENTATION_FILE);
-  copyNseFile(projectRoot, bundleName, filePath, NSE.IMPLEMENTATION_FILE);
+  return copyNseFile(projectRoot, bundleName, filePath);
 };
 
 export const generateInfoPlist = (
@@ -71,11 +71,13 @@ const copyNseFile = (
   projectRoot: string,
   bundleName: string,
   filePath: string,
-  destinationFileName: string
+  destinationFileName?: string
 ) => {
   const bundleDestination = path.join(projectRoot, "ios", bundleName);
+  const _destinationFileName = destinationFileName || path.basename(filePath);
   fs.mkdirSync(bundleDestination, { recursive: true });
-  fs.copyFileSync(filePath, path.join(bundleDestination, destinationFileName));
+  fs.copyFileSync(filePath, path.join(bundleDestination, _destinationFileName));
+  return _destinationFileName;
 };
 
 const BASE_PLIST = `<?xml version="1.0" encoding="UTF-8"?>

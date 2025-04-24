@@ -100,14 +100,21 @@ const withRemoteNotificationsDelegate: ConfigPlugin<PluginProps> = (
   const { remoteNotificationsDelegate, imports } = appDelegate;
 
   return withAppDelegate(config, (config) => {
-    if (imports && !config.modResults.contents.includes(imports)) {
-      config.modResults.contents = mergeContents({
-        tag: "REMOTE_NOTIFICATIONS_DELEGATE_IMPORTS",
-        anchor: APP_DELEGATE_ANCHORS.IMPORTS,
-        src: config.modResults.contents,
-        newSrc: imports,
-        comment: "//",
-      });
+    if (imports) {
+      const importArray = Array.isArray(imports) ? imports : [imports];
+      const importString = importArray
+        .filter((_import) => !config.modResults.contents.includes(_import))
+        .join("\n");
+
+      if (importString) {
+        config.modResults.contents = mergeContents({
+          tag: "REMOTE_NOTIFICATIONS_DELEGATE_IMPORTS",
+          anchor: APP_DELEGATE_ANCHORS.IMPORTS,
+          src: config.modResults.contents,
+          newSrc: importString,
+          comment: "//",
+        });
+      }
     }
 
     if (!config.modResults.contents.includes(remoteNotificationsDelegate)) {
@@ -130,19 +137,27 @@ const withNseTarget: ConfigPlugin<PluginProps> = (
 ) => {
   const { bundleName, hFilePath, mFilePath } = nse;
 
+  const copiedFiles: string[] = [];
+
   config = withDangerousMod(config, [
     "ios",
     (config) => {
-      NseUtils.copyHeaderFile(
-        config.modRequest.projectRoot,
-        bundleName,
-        hFilePath
-      );
-      NseUtils.copyImplementationFile(
-        config.modRequest.projectRoot,
-        bundleName,
-        mFilePath
-      );
+      const copyHeaderFile = (path: string | undefined) =>
+        NseUtils.copyHeaderFile(
+          config.modRequest.projectRoot,
+          bundleName,
+          path
+        );
+      const copyImplementationFile = (path: string | undefined) =>
+        NseUtils.copyImplementationFile(
+          config.modRequest.projectRoot,
+          bundleName,
+          path
+        );
+      const hFilePaths = Array.isArray(hFilePath) ? hFilePath : [hFilePath];
+      const mFilePaths = Array.isArray(mFilePath) ? mFilePath : [mFilePath];
+      copiedFiles.push(...hFilePaths.map(copyHeaderFile));
+      copiedFiles.push(...mFilePaths.map(copyImplementationFile));
 
       NseUtils.generateInfoPlist(
         config.modRequest.projectRoot,
@@ -172,7 +187,7 @@ const withNseTarget: ConfigPlugin<PluginProps> = (
       );
     }
 
-    const groupId = XcodeUtils.createPbxGroup(project, bundleName);
+    const groupId = XcodeUtils.createPbxGroup(project, bundleName, copiedFiles);
     XcodeUtils.addGroupToMainProject(project, groupId);
 
     const targetId = XcodeUtils.createTarget(
@@ -180,7 +195,7 @@ const withNseTarget: ConfigPlugin<PluginProps> = (
       bundleName,
       appBundleIdentifier
     );
-    XcodeUtils.addBuildPhases(project, targetId);
+    XcodeUtils.addBuildPhases(project, targetId, copiedFiles);
     XcodeUtils.configureBuildSettings(project, bundleName, config.name);
 
     return config;
