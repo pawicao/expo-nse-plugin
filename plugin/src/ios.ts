@@ -135,7 +135,7 @@ const withNseTarget: ConfigPlugin<PluginProps> = (
   config,
   { nse, appGroup }
 ) => {
-  const { bundleName, hFilePath, mFilePath } = nse;
+  const { bundleName, hFilePath, mFilePath, frameworks, extraBuildSettings } = nse;
 
   const copiedFiles: string[] = [];
 
@@ -162,7 +162,8 @@ const withNseTarget: ConfigPlugin<PluginProps> = (
       NseUtils.generateInfoPlist(
         config.modRequest.projectRoot,
         bundleName,
-        config.ios?.buildNumber
+        config.version,
+        config.ios?.buildNumber,
       );
       NseUtils.generateEntitlements(
         config.modRequest.projectRoot,
@@ -196,7 +197,8 @@ const withNseTarget: ConfigPlugin<PluginProps> = (
       appBundleIdentifier
     );
     XcodeUtils.addBuildPhases(project, targetId, copiedFiles);
-    XcodeUtils.configureBuildSettings(project, bundleName, config.name);
+    XcodeUtils.configureBuildSettings(project, bundleName, config.name, config.ios?.appleTeamId, extraBuildSettings);
+    XcodeUtils.linkFrameworks(project, targetId, frameworks);
 
     return config;
   });

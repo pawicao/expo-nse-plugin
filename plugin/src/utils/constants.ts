@@ -23,5 +23,11 @@ export const NSE = {
   TARGET_TYPE: "app_extension",
 } as const;
 
+export const STATIC_BUILD_SETTINGS = {
+  PODS_ROOT: "\"${SRCROOT}/Pods\"",
+} as const;
+
 export const DEFAULT_IPHONEOS_DEPLOYMENT_TARGET = "12.0";
 export const DEFAULT_MARKETING_VERSION = "1.0";
+
+export const ALWAYS_REQUIRE_FRAMEWORKS = ["UserNotifications.framework"]

@@ -29,6 +29,8 @@ export const PluginPropsSchema = z
       .object({
         mFilePath: z.union([z.string(), z.array(z.string())]).optional(),
         hFilePath: z.union([z.string(), z.array(z.string())]).optional(),
+        frameworks: z.array(z.string()).optional(),
+        extraBuildSettings: z.object({}).optional(),
         bundleName: z.string().default(NSE.BUNDLE_NAME),
       })
       .default({}),

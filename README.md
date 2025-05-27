@@ -17,7 +17,8 @@ A lightweight, unrestricted alternative for creating NSE with Expo under a stand
 
 ## Provisioning profiles
 
-This plugin **does not** handle anything related to the signing process and does not automate the process of choosing the provisioning profile for the NSE target. For this purpose it's probably best if you use Expo Application Services and its [multitarget configuration](https://docs.expo.dev/app-signing/local-credentials/#multi-target-project).
+The developer team will be copied from your `app.json` into the Notification Service Extension, so if your Xcode project "Automatically manage[s] signing" this may be sufficient to sign it.  
+Otherwise, this plugin **does nothing else** related to the signing process and does not automate the process of choosing the provisioning profile for the NSE target. For this purpose it's probably best if you use Expo Application Services and its [multitarget configuration](https://docs.expo.dev/app-signing/local-credentials/#multi-target-project).
 
 # Installation and usage
 
@@ -70,6 +71,10 @@ Advanced:
             "mFilePath": "./my_path/to_a_custom_nse_implementation_file", // or array of filepaths
             "hFilePath": "./my_path/to_a_custom_nse_header_file", // or array of filepaths
             "bundleName": "NotificationServiceExtension",
+            "frameworks": ["Intents.framework"],
+            "extraBuildSettings": {
+              "OTHER_LDFLAGS": "$(inherited) -lstdc++"
+            }
           }
         }
       ]
@@ -82,17 +87,19 @@ Advanced:
 
 All the options of the plugin configurable from the `app.json` / `app.config.js` file are listed below:
 
-| **Property**                              | **Type**                        | **Required** | **Default**                      | **Description**                                                                                                   |
-| ----------------------------------------- | ------------------------------- | ------------ | -------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `mode`                                    | `"development" \| "production"` | No           | `"development"`                  | Determines the APNs environment. Use `development` for testing and `production` for App Store builds              |
-| `appGroup`                                | `string`                        | No           | None                             | The App Group identifier used to share data between the main app and the NSE. Format: `group.your.bundle.id`      |
-| `backgroundModes.remoteNotifications`     | `boolean`                       | No           | `true`                           | Enables remote notifications background mode in your app's capabilities (if set to false, keeps as-is)            |
-| `backgroundModes.fetch`                   | `boolean`                       | No           | `false`                          | Enables background fetch capability in your app's capabilities (if set to false, keeps as-is)                     |
-| `appDelegate.remoteNotificationsDelegate` | `string`                        | No           | None                             | Custom code to be injected into the `didRegisterForRemoteNotificationsWithDeviceToken` method of your AppDelegate |
-| `appDelegate.imports`                     | `string \| string[]`            | No           | None                             | Additional import statements to be added to your AppDelegate                                                      |
-| `nse.mFilePath`                           | `string \| string[]`            | No           | Default Xcode's NSE content      | Path to a custom implementation file (.m) for the Notification Service Extension                                  |
-| `nse.hFilePath`                           | `string \| string[]`            | No           | Default Xcode's NSE content      | Path to a custom header file (.h) for the Notification Service Extension                                          |
-| `nse.bundleName`                          | `string`                        | No           | `"NotificationServiceExtension"` | The name of your Notification Service Extension target                                                            |
+| **Property**                              | **Type**                        | **Required** | **Default**                      | **Description**                                                                                                         |
+|-------------------------------------------|---------------------------------|--------------|----------------------------------|-------------------------------------------------------------------------------------------------------------------------|
+| `mode`                                    | `"development" \| "production"` | No           | `"development"`                  | Determines the APNs environment. Use `development` for testing and `production` for App Store builds                    |
+| `appGroup`                                | `string`                        | No           | None                             | The App Group identifier used to share data between the main app and the NSE. Format: `group.your.bundle.id`            |
+| `backgroundModes.remoteNotifications`     | `boolean`                       | No           | `true`                           | Enables remote notifications background mode in your app's capabilities (if set to false, keeps as-is)                  |
+| `backgroundModes.fetch`                   | `boolean`                       | No           | `false`                          | Enables background fetch capability in your app's capabilities (if set to false, keeps as-is)                           |
+| `appDelegate.remoteNotificationsDelegate` | `string`                        | No           | None                             | Custom code to be injected into the `didRegisterForRemoteNotificationsWithDeviceToken` method of your AppDelegate       |
+| `appDelegate.imports`                     | `string \| string[]`            | No           | None                             | Additional import statements to be added to your AppDelegate                                                            |
+| `nse.mFilePath`                           | `string \| string[]`            | No           | Default Xcode's NSE content      | Path to a custom implementation file (.m) for the Notification Service Extension                                        |
+| `nse.hFilePath`                           | `string \| string[]`            | No           | Default Xcode's NSE content      | Path to a custom header file (.h) for the Notification Service Extension                                                |
+| `nse.bundleName`                          | `string`                        | No           | `"NotificationServiceExtension"` | The name of your Notification Service Extension target                                                                  |
+| `nse.frameworks`                          | `string[]`                      | No           | None                             | Additional iOS Frameworks to link with the Notification Service Extension (UserNotifications.framework always included) |
+| `nse.extraBuildSettings`                  | `object`                        | No           | None                             | Additional keys/values to add to the Notification Service Extension's build settings                                    |
 
 # Contributing & testing
 
