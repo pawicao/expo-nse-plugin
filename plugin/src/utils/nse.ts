@@ -28,11 +28,12 @@ export const copyImplementationFile = (
 export const generateInfoPlist = (
   projectRoot: string,
   bundleName: string,
+  version?: string,
   buildNumber?: string
 ) => {
   const infoPlist = BASE_PLIST.replace(
     "__CONTENT__",
-    getInfoPlistContent(buildNumber)
+    getInfoPlistContent(version, buildNumber)
   );
 
   fs.writeFileSync(
@@ -88,7 +89,7 @@ __CONTENT__
 </dict>
 </plist>`;
 
-const getInfoPlistContent = (buildNumber?: string) => `  <key>NSExtension</key>
+const getInfoPlistContent = (version?: string, buildNumber?: string) => `  <key>NSExtension</key>
   <dict>
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.usernotifications.service</string>
@@ -101,5 +102,7 @@ const getInfoPlistContent = (buildNumber?: string) => `  <key>NSExtension</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundleShortVersionString</key>
+	<string>${version}</string>
 	<key>CFBundleVersion</key>
 	<string>${buildNumber || "1"}</string>`;

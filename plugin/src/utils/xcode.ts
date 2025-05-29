@@ -1,7 +1,8 @@
 import {
+  ALWAYS_REQUIRE_FRAMEWORKS,
   DEFAULT_IPHONEOS_DEPLOYMENT_TARGET,
   DEFAULT_MARKETING_VERSION,
-  NSE,
+  NSE, STATIC_BUILD_SETTINGS,
 } from "./constants";
 import type { XcodeProject } from "@expo/config-plugins";
 
@@ -66,7 +67,9 @@ export const addBuildPhases = (
 export const configureBuildSettings = (
   project: XcodeProject,
   bundleName: string,
-  appName: string
+  appName: string,
+  developmentTeam?: string,
+  extraBuildSettings?: object,
 ) => {
   // target name is the app name without spaces
   const appTargetName = appName.replaceAll(" ", "");
@@ -103,19 +106,40 @@ export const configureBuildSettings = (
     DEFAULT_MARKETING_VERSION;
 
   nse.Debug.buildSettings = {
+    ...STATIC_BUILD_SETTINGS,
     ...nse.Debug.buildSettings,
+    ...(extraBuildSettings ?? {}),
     CODE_SIGN_ENTITLEMENTS: `${bundleName}/${bundleName}.entitlements`,
     IPHONEOS_DEPLOYMENT_TARGET: debugIphoneOsDeploymentTarget,
     MARKETING_VERSION: debugMarketingVersion,
+
   };
 
   nse.Release.buildSettings = {
+    ...STATIC_BUILD_SETTINGS,
     ...nse.Release.buildSettings,
+    ...(extraBuildSettings ?? {}),
     CODE_SIGN_ENTITLEMENTS: `${bundleName}/${bundleName}.entitlements`,
     IPHONEOS_DEPLOYMENT_TARGET: releaseIphoneOsDeploymentTarget,
     MARKETING_VERSION: releaseMarketingVersion,
   };
+
+  if (developmentTeam) {
+    nse.Debug.buildSettings.DEVELOPMENT_TEAM = developmentTeam;
+    nse.Release.buildSettings.DEVELOPMENT_TEAM = developmentTeam;
+  }
 };
+
+export const linkFrameworks = (
+  project: XcodeProject,
+  targetId: string,
+  frameworks?: string[]
+) => {
+  const frameworksSet = new Set([...ALWAYS_REQUIRE_FRAMEWORKS, ...(frameworks ?? [])])
+  for (const framework of frameworksSet) {
+    project.addFramework(framework, { target: targetId, embed: false, link: true, sign: false });
+  }
+}
 
 const ensurePbxObjects = (project: XcodeProject) => {
   // Fixing the bug in the dependency package.
