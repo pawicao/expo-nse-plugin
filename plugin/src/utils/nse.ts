@@ -88,6 +88,8 @@ const getInfoPlistContent = (version?: string, buildNumber?: string) => `  <key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundleDisplayName</key>
+	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundleShortVersionString</key>
 	<string>${version}</string>
 	<key>CFBundleVersion</key>
