@@ -67,12 +67,16 @@ const withAppGroup: ConfigPlugin<PluginProps> = (config, { appGroup }) => {
   if (!appGroup) return config;
 
   return withEntitlementsPlist(config, (config) => {
+    const appGroups = Array.isArray(appGroup) ? appGroup : [appGroup];
+
     if (!Array.isArray(config.modResults[APP_GROUPS_KEY])) {
       config.modResults[APP_GROUPS_KEY] = [];
     }
 
-    if (!config.modResults[APP_GROUPS_KEY].includes(appGroup)) {
-      config.modResults[APP_GROUPS_KEY].push(appGroup);
+    for (const a of appGroups) {
+      if (!config.modResults[APP_GROUPS_KEY].includes(a)) {
+        config.modResults[APP_GROUPS_KEY].push(a);
+      }
     }
 
     return config;

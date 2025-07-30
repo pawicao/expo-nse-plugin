@@ -36,17 +36,19 @@ export const generateInfoPlist = (
 export const generateEntitlements = (
   projectRoot: string,
   bundleName: string,
-  appGroup: string | undefined
+  appGroup: string[] | string | undefined
 ) => {
-  const entitlements = BASE_PLIST.replace(
-    '__CONTENT__',
-    !appGroup
-      ? ''
-      : `	<key>${APP_GROUPS_KEY}</key>
+  let plistContent = '';
+
+  if (appGroup) {
+    const appGroups = Array.isArray(appGroup) ? appGroup : [appGroup];
+    plistContent = `	<key>${APP_GROUPS_KEY}</key>
 	<array>
-		<string>${appGroup}</string>
-	</array>`
-  );
+${appGroups.map((a) => `\t\t<string>${a}</string>`).join('\n')}
+	</array>`;
+  }
+
+  const entitlements = BASE_PLIST.replace('__CONTENT__', plistContent);
 
   fs.writeFileSync(
     path.join(projectRoot, 'ios', bundleName, `${bundleName}.entitlements`),
