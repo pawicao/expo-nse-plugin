@@ -1,10 +1,10 @@
 import {
+  type ConfigPlugin,
   withAppDelegate,
   withDangerousMod,
   withEntitlementsPlist,
   withInfoPlist,
   withXcodeProject,
-  type ConfigPlugin,
 } from '@expo/config-plugins';
 import * as NseUtils from './utils/nse';
 import * as XcodeUtils from './utils/xcode';
@@ -21,6 +21,7 @@ const withNsePluginIos: ConfigPlugin<PluginProps> = (config, props) => {
   config = withPushNotificationsEntitlement(config, props);
   config = withBackgroundModes(config, props);
   config = withAppGroup(config, props);
+  config = withIntents(config, props);
   config = withRemoteNotificationsDelegate(config, props);
   config = withNseTarget(config, props);
 
@@ -76,6 +77,24 @@ const withAppGroup: ConfigPlugin<PluginProps> = (config, { appGroup }) => {
     for (const a of appGroups) {
       if (!config.modResults[APP_GROUPS_KEY].includes(a)) {
         config.modResults[APP_GROUPS_KEY].push(a);
+      }
+    }
+
+    return config;
+  });
+};
+
+const withIntents: ConfigPlugin<PluginProps> = (config, { intents }) => {
+  if (!intents) return config;
+
+  return withInfoPlist(config, (config) => {
+    if (!Array.isArray(config.modResults.NSUserActivityTypes)) {
+      config.modResults.NSUserActivityTypes = [];
+    }
+
+    for (const intent of intents) {
+      if (!config.modResults.NSUserActivityTypes.includes(intent)) {
+        config.modResults.NSUserActivityTypes.push(intent);
       }
     }
 

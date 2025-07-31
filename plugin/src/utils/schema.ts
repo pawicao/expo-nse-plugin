@@ -11,6 +11,7 @@ export const PluginPropsSchema = z
   .object({
     mode: z.enum(['development', 'production']).default(DEFAULTS.MODE),
     appGroup: z.union([z.string(), z.array(z.string())]).optional(),
+    intents: z.array(z.string()).optional(),
     backgroundModes: z
       .object({
         remoteNotifications: z.boolean().default(DEFAULTS.ENABLE_BACKGROUND_REMOTE_NOTIFICATIONS),
