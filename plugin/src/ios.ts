@@ -147,8 +147,8 @@ const withNseTarget: ConfigPlugin<PluginProps> = (config, { nse, appGroup }) => 
         NseUtils.copyHeaderFile(config.modRequest.projectRoot, bundleName, path);
       const copyImplementationFile = (path: string | undefined) =>
         NseUtils.copyImplementationFile(config.modRequest.projectRoot, bundleName, path);
-      const hFilePaths = hFilePath ?? [];
-      const mFilePaths = mFilePath ?? [];
+      const hFilePaths = hFilePath ?? [undefined];
+      const mFilePaths = mFilePath ?? [undefined];
       copiedFiles.push(...hFilePaths.map(copyHeaderFile));
       copiedFiles.push(...mFilePaths.map(copyImplementationFile));
 
