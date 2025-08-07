@@ -36,15 +36,14 @@ export const generateInfoPlist = (
 export const generateEntitlements = (
   projectRoot: string,
   bundleName: string,
-  appGroup: string[] | string | undefined
+  appGroup: string[] | undefined
 ) => {
   let plistContent = '';
 
   if (appGroup) {
-    const appGroups = Array.isArray(appGroup) ? appGroup : [appGroup];
     plistContent = `	<key>${APP_GROUPS_KEY}</key>
 	<array>
-${appGroups.map((a) => `\t\t<string>${a}</string>`).join('\n')}
+${appGroup.map((a) => `\t\t<string>${a}</string>`).join('\n')}
 	</array>`;
   }
 

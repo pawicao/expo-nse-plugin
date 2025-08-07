@@ -68,13 +68,11 @@ const withAppGroup: ConfigPlugin<PluginProps> = (config, { appGroup }) => {
   if (!appGroup) return config;
 
   return withEntitlementsPlist(config, (config) => {
-    const appGroups = Array.isArray(appGroup) ? appGroup : [appGroup];
-
     if (!Array.isArray(config.modResults[APP_GROUPS_KEY])) {
       config.modResults[APP_GROUPS_KEY] = [];
     }
 
-    for (const a of appGroups) {
+    for (const a of appGroup) {
       if (!config.modResults[APP_GROUPS_KEY].includes(a)) {
         config.modResults[APP_GROUPS_KEY].push(a);
       }
@@ -108,8 +106,7 @@ const withRemoteNotificationsDelegate: ConfigPlugin<PluginProps> = (config, { ap
 
   return withAppDelegate(config, (config) => {
     if (imports) {
-      const importArray = Array.isArray(imports) ? imports : [imports];
-      const importString = importArray
+      const importString = imports
         .filter((_import) => !config.modResults.contents.includes(_import))
         .join('\n');
 
@@ -150,8 +147,8 @@ const withNseTarget: ConfigPlugin<PluginProps> = (config, { nse, appGroup }) => 
         NseUtils.copyHeaderFile(config.modRequest.projectRoot, bundleName, path);
       const copyImplementationFile = (path: string | undefined) =>
         NseUtils.copyImplementationFile(config.modRequest.projectRoot, bundleName, path);
-      const hFilePaths = Array.isArray(hFilePath) ? hFilePath : [hFilePath];
-      const mFilePaths = Array.isArray(mFilePath) ? mFilePath : [mFilePath];
+      const hFilePaths = hFilePath ?? [];
+      const mFilePaths = mFilePath ?? [];
       copiedFiles.push(...hFilePaths.map(copyHeaderFile));
       copiedFiles.push(...mFilePaths.map(copyImplementationFile));
 

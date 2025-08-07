@@ -7,10 +7,15 @@ const DEFAULTS = {
   ENABLED_BACKGROUND_FETCH: false,
 } as const;
 
+// Let user provide (string | string[] | undefined), but auto-wrap the bare string to return (string[] | undefined)
+const zArrayStringFuzzyOptional = z
+  .union([z.string().transform((val) => [val]), z.array(z.string())])
+  .optional();
+
 export const PluginPropsSchema = z
   .object({
     mode: z.enum(['development', 'production']).default(DEFAULTS.MODE),
-    appGroup: z.union([z.string(), z.array(z.string())]).optional(),
+    appGroup: zArrayStringFuzzyOptional,
     intents: z.array(z.string()).optional(),
     backgroundModes: z
       .object({
@@ -21,13 +26,13 @@ export const PluginPropsSchema = z
     appDelegate: z
       .object({
         remoteNotificationsDelegate: z.string().optional(),
-        imports: z.union([z.string(), z.array(z.string())]).optional(),
+        imports: zArrayStringFuzzyOptional,
       })
       .optional(),
     nse: z
       .object({
-        mFilePath: z.union([z.string(), z.array(z.string())]).optional(),
-        hFilePath: z.union([z.string(), z.array(z.string())]).optional(),
+        mFilePath: zArrayStringFuzzyOptional,
+        hFilePath: zArrayStringFuzzyOptional,
         frameworks: z.array(z.string()).optional(),
         extraBuildSettings: z.object({}).optional(),
         bundleName: z.string().default(NSE.BUNDLE_NAME),
