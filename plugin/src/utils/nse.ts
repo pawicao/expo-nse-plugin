@@ -5,18 +5,14 @@ import { APP_GROUPS_KEY, NSE } from './constants';
 const basePluginDirectory = require.resolve('expo-nse-plugin/package.json');
 const defaultFilesDirectory = path.join(basePluginDirectory, '../assets/nse/');
 
-export const copyHeaderFile = (projectRoot: string, bundleName: string, hFilePath?: string) => {
-  const filePath = hFilePath || path.join(defaultFilesDirectory, NSE.HEADER_FILE);
-  return copyNseFile(projectRoot, bundleName, filePath);
+export const copySourceFile = (projectRoot: string, bundleName: string, sourceFilePath: string) => {
+  return copyNseFile(projectRoot, bundleName, sourceFilePath);
 };
 
-export const copyImplementationFile = (
-  projectRoot: string,
-  bundleName: string,
-  mFilePath?: string
-) => {
-  const filePath = mFilePath || path.join(defaultFilesDirectory, NSE.IMPLEMENTATION_FILE);
-  return copyNseFile(projectRoot, bundleName, filePath);
+export const copyDefaultFiles = (projectRoot: string, bundleName: string) => {
+  const headerFile = copyNseFile(projectRoot, bundleName, path.join(defaultFilesDirectory, NSE.HEADER_FILE));
+  const implementationFile = copyNseFile(projectRoot, bundleName, path.join(defaultFilesDirectory, NSE.IMPLEMENTATION_FILE));
+  return [headerFile, implementationFile];
 };
 
 export const generateInfoPlist = (

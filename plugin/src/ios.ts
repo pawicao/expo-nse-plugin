@@ -136,21 +136,21 @@ const withRemoteNotificationsDelegate: ConfigPlugin<PluginProps> = (config, { ap
 };
 
 const withNseTarget: ConfigPlugin<PluginProps> = (config, { nse, appGroup }) => {
-  const { bundleName, hFilePath, mFilePath, frameworks, extraBuildSettings } = nse;
+  const { bundleName, sourceFiles, frameworks, extraBuildSettings } = nse;
 
   const copiedFiles: string[] = [];
 
   config = withDangerousMod(config, [
     'ios',
     (config) => {
-      const copyHeaderFile = (path: string | undefined) =>
-        NseUtils.copyHeaderFile(config.modRequest.projectRoot, bundleName, path);
-      const copyImplementationFile = (path: string | undefined) =>
-        NseUtils.copyImplementationFile(config.modRequest.projectRoot, bundleName, path);
-      const hFilePaths = hFilePath ?? [undefined];
-      const mFilePaths = mFilePath ?? [undefined];
-      copiedFiles.push(...hFilePaths.map(copyHeaderFile));
-      copiedFiles.push(...mFilePaths.map(copyImplementationFile));
+      const copySourceFile = (path: string) =>
+        NseUtils.copySourceFile(config.modRequest.projectRoot, bundleName, path);
+      
+      if (!sourceFiles || sourceFiles.length === 0) {
+        copiedFiles.push(...NseUtils.copyDefaultFiles(config.modRequest.projectRoot, bundleName));
+      } else {
+        copiedFiles.push(...sourceFiles.map(copySourceFile));
+      }
 
       NseUtils.generateInfoPlist(
         config.modRequest.projectRoot,
@@ -180,12 +180,15 @@ const withNseTarget: ConfigPlugin<PluginProps> = (config, { nse, appGroup }) => 
 
     const targetId = XcodeUtils.createTarget(project, bundleName, appBundleIdentifier);
     XcodeUtils.addBuildPhases(project, targetId, copiedFiles);
+
+    const hasSwiftFiles = (sourceFiles ?? []).some(filePath => filePath.endsWith('.swift'));
     XcodeUtils.configureBuildSettings(
       project,
       bundleName,
       config.name,
       config.ios?.appleTeamId,
-      extraBuildSettings
+      extraBuildSettings,
+      hasSwiftFiles
     );
     XcodeUtils.linkFrameworks(project, targetId, frameworks);
 

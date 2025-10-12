@@ -69,8 +69,7 @@ Advanced:
             "imports": "#import \"SomeOtherService.h\"" // or array of import lines
           },
           "nse": {
-            "mFilePath": "./my_path/to_a_custom_nse_implementation_file", // or array of filepaths
-            "hFilePath": "./my_path/to_a_custom_nse_header_file", // or array of filepaths
+            "sourceFiles": ["./my_path/to_a_custom_nse_implementation_file", "./my_path/to_a_custom_nse_header_file", "./my_path/to_a_custom_swift_file"],
             "bundleName": "NotificationServiceExtension",
             "frameworks": ["Intents.framework"],
             "extraBuildSettings": {
@@ -97,8 +96,7 @@ All the options of the plugin configurable from the `app.json` / `app.config.js`
 | `backgroundModes.fetch`                   | `boolean`                       | No           | `false`                          | Enables background fetch capability in your app's capabilities (if set to false, keeps as-is)                                               |
 | `appDelegate.remoteNotificationsDelegate` | `string`                        | No           | None                             | Custom code to be injected into the `didRegisterForRemoteNotificationsWithDeviceToken` method of your AppDelegate                           |
 | `appDelegate.imports`                     | `string \| string[]`            | No           | None                             | Additional import statements to be added to your AppDelegate                                                                                |
-| `nse.mFilePath`                           | `string \| string[]`            | No           | Default Xcode's NSE content      | Path to a custom implementation file (.m) for the Notification Service Extension                                                            |
-| `nse.hFilePath`                           | `string \| string[]`            | No           | Default Xcode's NSE content      | Path to a custom header file (.h) for the Notification Service Extension                                                                    |
+| `nse.sourceFiles`                           | `string \| string[]`            | No           | Default Xcode's NSE content      | Path to custom source files (.swift, .m, .h) for the Notification Service Extension. Automatically enables Swift build settings when Swift files are present.                                                            |
 | `nse.bundleName`                          | `string`                        | No           | `"NotificationServiceExtension"` | The name of your Notification Service Extension target                                                                                      |
 | `nse.frameworks`                          | `string[]`                      | No           | None                             | Additional iOS Frameworks to link with the Notification Service Extension (UserNotifications.framework always included)                     |
 | `nse.extraBuildSettings`                  | `object`                        | No           | None                             | Additional keys/values to add to the Notification Service Extension's build settings                                                        |
@@ -110,3 +108,34 @@ PRs and feedback are more than welcome! If you see a way of extending this plugi
 This plugin has not been thoroughly tested over different range of Xcode versions, I simply created it for my own use case. Therefore there's a chance that it may fail in some specific configurations of your particular project and your environment. If this is the case, feel free to raise an issue and I'll try to do something about it!
 
 Refer to [`expo-module-scripts`](https://www.npmjs.com/package/expo-module-scripts) documentation for information about useful commands while developing the plugin.
+
+## Flexible Source Files Support
+
+Starting with v2.0.0 the plugin simplifies the source files configuration for your Notification Service Extension, allowing you to e.g. include swift files. When you provide source files via the `sourceFiles` option, the plugin will automatically:
+
+- Add the source files to the NSE target's Compile Sources phase
+- Enable Swift build settings (`ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: YES`) when Swift files are detected
+- Set the Swift version to 5.0 when Swift files are present (if needed, this can be overwritten with setting `SWIFT_VERSION` via the `extraBuildSettings` property)
+
+### Breaking Change Notice
+
+**Version 2.0+ Breaking Change**: The `mFilePath` and `hFilePath` options have been removed in favor of the unified `sourceFiles` option. If you were using the legacy options, update your configuration:
+
+**Before (v1.x):**
+```json
+{
+  "nse": {
+    "mFilePath": "./src/NotificationService.m",
+    "hFilePath": "./src/NotificationService.h"
+  }
+}
+```
+
+**After (v2.0+):**
+```json
+{
+  "nse": {
+    "sourceFiles": ["./src/NotificationService.m", "./src/NotificationService.h"]
+  }
+}
+```

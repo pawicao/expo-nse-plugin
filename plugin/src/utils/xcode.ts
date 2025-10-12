@@ -4,6 +4,7 @@ import {
   DEFAULT_MARKETING_VERSION,
   NSE,
   STATIC_BUILD_SETTINGS,
+  SWIFT_BUILD_SETTINGS,
 } from './constants';
 import type { XcodeProject } from '@expo/config-plugins';
 
@@ -59,7 +60,8 @@ export const configureBuildSettings = (
   bundleName: string,
   appName: string,
   developmentTeam?: string,
-  extraBuildSettings?: object
+  extraBuildSettings?: object,
+  hasSwiftFiles?: boolean
 ) => {
   // target name is the app name without spaces
   const appTargetName = appName.replaceAll(' ', '');
@@ -89,9 +91,12 @@ export const configureBuildSettings = (
     app.Debug?.buildSettings?.MARKETING_VERSION ||
     DEFAULT_MARKETING_VERSION;
 
+  const swiftBuildSettings = hasSwiftFiles ? SWIFT_BUILD_SETTINGS : undefined
+
   nse.Debug.buildSettings = {
     ...STATIC_BUILD_SETTINGS,
     ...nse.Debug.buildSettings,
+    ...swiftBuildSettings,
     ...(extraBuildSettings ?? {}),
     CODE_SIGN_ENTITLEMENTS: `${bundleName}/${bundleName}.entitlements`,
     IPHONEOS_DEPLOYMENT_TARGET: debugIphoneOsDeploymentTarget,
@@ -101,6 +106,7 @@ export const configureBuildSettings = (
   nse.Release.buildSettings = {
     ...STATIC_BUILD_SETTINGS,
     ...nse.Release.buildSettings,
+    ...swiftBuildSettings,
     ...(extraBuildSettings ?? {}),
     CODE_SIGN_ENTITLEMENTS: `${bundleName}/${bundleName}.entitlements`,
     IPHONEOS_DEPLOYMENT_TARGET: releaseIphoneOsDeploymentTarget,

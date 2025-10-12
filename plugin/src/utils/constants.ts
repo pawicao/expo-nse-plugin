@@ -12,6 +12,10 @@ export const APP_DELEGATE_ANCHORS = {
 export const APP_GROUPS_KEY = 'com.apple.security.application-groups';
 export const PUSH_NOTIFICATIONS_ENTITLEMENT_KEY = 'aps-environment';
 
+export const DEFAULT_IPHONEOS_DEPLOYMENT_TARGET = '12.0';
+export const DEFAULT_MARKETING_VERSION = '1.0';
+export const DEFAULT_SWIFT_VERSION = '5.0'
+
 export const NSE = {
   BUNDLE_NAME: 'NotificationServiceExtension',
   BUNDLE_VERSION: '1',
@@ -27,7 +31,9 @@ export const STATIC_BUILD_SETTINGS = {
   PODS_ROOT: '"${SRCROOT}/Pods"',
 } as const;
 
-export const DEFAULT_IPHONEOS_DEPLOYMENT_TARGET = '12.0';
-export const DEFAULT_MARKETING_VERSION = '1.0';
+export const SWIFT_BUILD_SETTINGS = {
+  ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: 'YES',
+  SWIFT_VERSION: DEFAULT_SWIFT_VERSION,
+} as const
 
 export const ALWAYS_REQUIRE_FRAMEWORKS = ['UserNotifications.framework'];
