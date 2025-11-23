@@ -1,7 +1,7 @@
 {
   "name": "expo-nse-plugin",
   "description": "An Expo config plugin for iOS that allows you to easily add a Notification Service Extension to an Expo-managed React Native project.",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
