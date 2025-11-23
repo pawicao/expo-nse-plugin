@@ -136,7 +136,7 @@ const withRemoteNotificationsDelegate: ConfigPlugin<PluginProps> = (config, { ap
 };
 
 const withNseTarget: ConfigPlugin<PluginProps> = (config, { nse, appGroup }) => {
-  const { bundleName, sourceFiles, frameworks, extraBuildSettings } = nse;
+  const { bundleName, sourceFiles, frameworks, extraBuildSettings, extraInfoPlist } = nse;
 
   const copiedFiles: string[] = [];
 
@@ -145,7 +145,7 @@ const withNseTarget: ConfigPlugin<PluginProps> = (config, { nse, appGroup }) => 
     (config) => {
       const copySourceFile = (path: string) =>
         NseUtils.copySourceFile(config.modRequest.projectRoot, bundleName, path);
-      
+
       if (!sourceFiles || sourceFiles.length === 0) {
         copiedFiles.push(...NseUtils.copyDefaultFiles(config.modRequest.projectRoot, bundleName));
       } else {
@@ -156,7 +156,8 @@ const withNseTarget: ConfigPlugin<PluginProps> = (config, { nse, appGroup }) => 
         config.modRequest.projectRoot,
         bundleName,
         config.version,
-        config.ios?.buildNumber
+        config.ios?.buildNumber,
+        extraInfoPlist
       );
       NseUtils.generateEntitlements(config.modRequest.projectRoot, bundleName, appGroup);
 

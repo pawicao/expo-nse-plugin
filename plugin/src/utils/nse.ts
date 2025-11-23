@@ -10,8 +10,16 @@ export const copySourceFile = (projectRoot: string, bundleName: string, sourceFi
 };
 
 export const copyDefaultFiles = (projectRoot: string, bundleName: string) => {
-  const headerFile = copyNseFile(projectRoot, bundleName, path.join(defaultFilesDirectory, NSE.HEADER_FILE));
-  const implementationFile = copyNseFile(projectRoot, bundleName, path.join(defaultFilesDirectory, NSE.IMPLEMENTATION_FILE));
+  const headerFile = copyNseFile(
+    projectRoot,
+    bundleName,
+    path.join(defaultFilesDirectory, NSE.HEADER_FILE)
+  );
+  const implementationFile = copyNseFile(
+    projectRoot,
+    bundleName,
+    path.join(defaultFilesDirectory, NSE.IMPLEMENTATION_FILE)
+  );
   return [headerFile, implementationFile];
 };
 
@@ -19,9 +27,17 @@ export const generateInfoPlist = (
   projectRoot: string,
   bundleName: string,
   version?: string,
-  buildNumber?: string
+  buildNumber?: string,
+  extraInfoPlist: Record<string, string> = {}
 ) => {
-  const infoPlist = BASE_PLIST.replace('__CONTENT__', getInfoPlistContent(version, buildNumber));
+  let content = getInfoPlistContent(version, buildNumber);
+  for (const [key, value] of Object.entries(extraInfoPlist)) {
+    content += `
+	<key>${key}</key>
+	<string>${value}</string>`;
+  }
+
+  const infoPlist = BASE_PLIST.replace('__CONTENT__', content);
 
   fs.writeFileSync(
     path.join(projectRoot, 'ios', bundleName, `${bundleName}${NSE.PLIST_FILE_SUFFIX}`),

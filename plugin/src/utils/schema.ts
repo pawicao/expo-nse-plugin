@@ -33,7 +33,8 @@ export const PluginPropsSchema = z
       .object({
         sourceFiles: zArrayStringFuzzyOptional,
         frameworks: z.array(z.string()).optional(),
-        extraBuildSettings: z.object({}).optional(),
+        extraBuildSettings: z.record(z.string(), z.string()).optional(),
+        extraInfoPlist: z.record(z.string(), z.string()).optional(),
         bundleName: z.string().default(NSE.BUNDLE_NAME),
       })
       .default({}),

@@ -60,7 +60,7 @@ export const configureBuildSettings = (
   bundleName: string,
   appName: string,
   developmentTeam?: string,
-  extraBuildSettings?: object,
+  extraBuildSettings?: Record<string, string>,
   hasSwiftFiles?: boolean
 ) => {
   // target name is the app name without spaces
