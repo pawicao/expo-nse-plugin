@@ -91,7 +91,7 @@ Advanced:
 All the options of the plugin configurable from the `app.json` / `app.config.js` file are listed below:
 
 | **Property**                              | **Type**                        | **Required** | **Default**                      | **Description**                                                                                                                                               |
-|-------------------------------------------|---------------------------------|--------------|----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ----------------------------------------- | ------------------------------- | ------------ | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `mode`                                    | `"development" \| "production"` | No           | `"development"`                  | Determines the APNs environment. Use `development` for testing and `production` for App Store builds                                                          |
 | `appGroup`                                | `string \| string[]`            | No           | None                             | The App Group identifier or identifiers used to share data between the main app and the NSE. Format: `group.your.bundle.id`                                   |
 | `intents`                                 | `string[]`                      | No           | None                             | Registers intents for your main app in `NSUserActivityTypes`, which can be required for SiriKit integration and Communication Notifications                   |
@@ -126,6 +126,7 @@ Starting with v2.0.0 the plugin simplifies the source files configuration for yo
 **Version 2.0+ Breaking Change**: The `mFilePath` and `hFilePath` options have been removed in favor of the unified `sourceFiles` option. If you were using the legacy options, update your configuration:
 
 **Before (v1.x):**
+
 ```json
 {
   "nse": {
@@ -136,6 +137,7 @@ Starting with v2.0.0 the plugin simplifies the source files configuration for yo
 ```
 
 **After (v2.0+):**
+
 ```json
 {
   "nse": {

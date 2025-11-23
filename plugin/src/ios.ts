@@ -182,7 +182,7 @@ const withNseTarget: ConfigPlugin<PluginProps> = (config, { nse, appGroup }) => 
     const targetId = XcodeUtils.createTarget(project, bundleName, appBundleIdentifier);
     XcodeUtils.addBuildPhases(project, targetId, copiedFiles);
 
-    const hasSwiftFiles = (sourceFiles ?? []).some(filePath => filePath.endsWith('.swift'));
+    const hasSwiftFiles = (sourceFiles ?? []).some((filePath) => filePath.endsWith('.swift'));
     XcodeUtils.configureBuildSettings(
       project,
       bundleName,

@@ -91,7 +91,7 @@ export const configureBuildSettings = (
     app.Debug?.buildSettings?.MARKETING_VERSION ||
     DEFAULT_MARKETING_VERSION;
 
-  const swiftBuildSettings = hasSwiftFiles ? SWIFT_BUILD_SETTINGS : undefined
+  const swiftBuildSettings = hasSwiftFiles ? SWIFT_BUILD_SETTINGS : undefined;
 
   nse.Debug.buildSettings = {
     ...STATIC_BUILD_SETTINGS,
