@@ -49,10 +49,10 @@ export const createTarget = (
   return uuid as string;
 };
 
-export const addBuildPhases = (project: XcodeProject, targetId: string, sources: string[]) => {
+export const addBuildPhases = (project: XcodeProject, targetId: string, sources: string[], resources: string[]) => {
   project.addBuildPhase(sources, 'PBXSourcesBuildPhase', 'Sources', targetId);
   project.addBuildPhase([], 'PBXFrameworksBuildPhase', 'Frameworks', targetId);
-  project.addBuildPhase([], 'PBXResourcesBuildPhase', 'Resources', targetId);
+  project.addBuildPhase(resources, 'PBXResourcesBuildPhase', 'Resources', targetId);
 };
 
 export const configureBuildSettings = (

@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { APP_GROUPS_KEY, NSE } from './constants';
 
-const basePluginDirectory = require.resolve('expo-nse-plugin/package.json');
+const basePluginDirectory = require.resolve('expo-nse-plugin');
 const defaultFilesDirectory = path.join(basePluginDirectory, '../assets/nse/');
 
 export const copySourceFile = (projectRoot: string, bundleName: string, sourceFilePath: string) => {

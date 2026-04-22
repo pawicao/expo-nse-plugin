@@ -136,9 +136,10 @@ const withRemoteNotificationsDelegate: ConfigPlugin<PluginProps> = (config, { ap
 };
 
 const withNseTarget: ConfigPlugin<PluginProps> = (config, { nse, appGroup }) => {
-  const { bundleName, sourceFiles, frameworks, extraBuildSettings, extraInfoPlist } = nse;
+  const { bundleName, sourceFiles, resources, frameworks, extraBuildSettings, extraInfoPlist } = nse;
 
   const copiedFiles: string[] = [];
+  const copiedResources: string[] = [];
 
   config = withDangerousMod(config, [
     'ios',
@@ -150,6 +151,10 @@ const withNseTarget: ConfigPlugin<PluginProps> = (config, { nse, appGroup }) => 
         copiedFiles.push(...NseUtils.copyDefaultFiles(config.modRequest.projectRoot, bundleName));
       } else {
         copiedFiles.push(...sourceFiles.map(copySourceFile));
+      }
+
+      if (resources) {
+        copiedResources.push(...resources.map(copySourceFile));
       }
 
       NseUtils.generateInfoPlist(
@@ -176,11 +181,11 @@ const withNseTarget: ConfigPlugin<PluginProps> = (config, { nse, appGroup }) => 
       throw new Error('You must provide an `ios.bundleIdentifier` of your app in your app config.');
     }
 
-    const groupId = XcodeUtils.createPbxGroup(project, bundleName, copiedFiles);
+    const groupId = XcodeUtils.createPbxGroup(project, bundleName, [...copiedFiles, ...copiedResources]);
     XcodeUtils.addGroupToMainProject(project, groupId);
 
     const targetId = XcodeUtils.createTarget(project, bundleName, appBundleIdentifier);
-    XcodeUtils.addBuildPhases(project, targetId, copiedFiles);
+    XcodeUtils.addBuildPhases(project, targetId, copiedFiles, copiedResources);
 
     const hasSwiftFiles = (sourceFiles ?? []).some((filePath) => filePath.endsWith('.swift'));
     XcodeUtils.configureBuildSettings(
