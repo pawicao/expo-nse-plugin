@@ -28,8 +28,7 @@
   "homepage": "https://github.com/pawicao/expo-nse-plugin#readme",
   "devDependencies": {
     "expo": "*",
-    "expo-module-scripts": "^4.0.3",
-    "zod": "^3.24.1"
+    "expo-module-scripts": "^4.0.3"
   },
   "peerDependencies": {
     "expo": "*"

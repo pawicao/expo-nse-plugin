@@ -3,9 +3,9 @@ import withNsePluginIos from './ios';
 import withNsePluginAndroid from './android';
 
 import type { ConfigPlugin } from '@expo/config-plugins';
-import type { PluginProps } from './utils/schema';
+import type { PluginPropsInput } from './utils/schema';
 
-const withNsePlugin: ConfigPlugin<PluginProps> = (config, props) => {
+const withNsePlugin: ConfigPlugin<PluginPropsInput> = (config, props) => {
   const _props = validatePluginProperties(props);
 
   config = withNsePluginAndroid(config, _props);
